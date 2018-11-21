@@ -5,6 +5,9 @@
 </template>
 
 <script>
+const minSpacing = 40;
+const ROUND_TO_NEAREST = 5;
+
 export default {
   name: 'Graph',
   props: {
@@ -31,7 +34,11 @@ export default {
         width: this.size.width,
         height: this.size.height,
         maxValues: this.maxValues,
+        multiple: this.multiple,
+        numberOfTicks: this.numberOfTicks,
+        spacing: this.spacing,
         dataLength: this.data.length,
+
       };
     },
     maxValues() {
@@ -49,6 +56,10 @@ export default {
         }
       }
 
+      // Lock values to next highest multiple of 10
+      x = Math.ceil(x / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
+      y = Math.ceil(y / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
+
       return { x, y };
     },
     scale() {
@@ -56,6 +67,27 @@ export default {
         x: this.size.width / this.maxValues.x,
         y: this.size.height / this.maxValues.y,
       };
+    },
+    multiple() {
+      const minX = this.size.width / minSpacing;
+      const multipleX = Math.ceil(this.maxValues.x / minX / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
+
+      const minY = this.size.height / minSpacing;
+      const multipleY = Math.ceil(this.maxValues.y / minY / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
+
+      return { x: multipleX, y: multipleY };
+    },
+    numberOfTicks() {
+      return {
+        x: this.maxValues.x / this.multiple.x,
+        y: this.maxValues.y / this.multiple.y,
+      }
+    },
+    spacing() {
+      return {
+        x: this.size.width / this.numberOfTicks.x,
+        y: this.size.height / this.numberOfTicks.y,
+      }
     }
   },
   mounted() {

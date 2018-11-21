@@ -33,15 +33,15 @@
       </template>
     </Grid>
     <Point
-      v-for="point in points"
-      :point="point"
-      :key="point.id"
+      v-for="({ x, y, id }) in points"
+      :point="{ x, y }"
+      :key="id"
     >
       <template slot-scope="{ position, style }">
         <div
           class="point"
           :style="style"
-          :id="`${position.x}-${position.y}`"
+          :id="`${x}-${y}`"
         />
       </template>
     </Point>
@@ -54,7 +54,7 @@
   import Grid from './Grid';
 
   const points = [];
-  const scale = (Math.round(Math.random() * 10) + 5) * 10;
+  const scale = (Math.round(Math.random() * 100) + 5) * 10;
   for (let i = 0; i < 200; i++) {
     points.push({
       id: i,
@@ -62,8 +62,6 @@
       y: Math.round(Math.random() * scale) / 2,
     });
   }
-
-  console.log(points);
 
   export default {
     components: {

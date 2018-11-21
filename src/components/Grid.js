@@ -1,5 +1,3 @@
-const minSpacing = 30;
-
 export default {
   name: "Grid",
   inject: ["graph"],
@@ -9,28 +7,21 @@ export default {
     },
     y() {
       return this.generateLines(
-        minSpacing,
-        this.giraffe.scale.y,
-        this.giraffe.height
+        this.giraffe.numberOfTicks.y,
+        this.giraffe.spacing.y,
+        this.giraffe.multiple.y
       );
     },
     x() {
       return this.generateLines(
-        minSpacing,
-        this.giraffe.scale.x,
-        this.giraffe.width
+        this.giraffe.numberOfTicks.x,
+        this.giraffe.spacing.x,
+        this.giraffe.multiple.x
       );
     }
   },
   methods: {
-    generateLines(minimum, scale, dimension) {
-      // Calculate a multiple of our scaling factor that is
-      // more than the minimum spacing size;'
-      // debugger;
-      const multiple = Math.round(minimum / scale);
-      const spacing = multiple * scale;
-      const number = dimension / spacing;
-
+    generateLines(number, spacing, multiple) {
       const lines = [];
       for (let i = 0; i <= number; i++) {
         lines.push({
