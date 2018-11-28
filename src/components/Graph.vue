@@ -1,12 +1,12 @@
 <template>
-  <div class="graph">
+  <div>
     <slot />
   </div>
 </template>
 
 <script>
 const minSpacing = 40;
-const ROUND_TO_NEAREST = 10;
+const ROUND_TO_NEAREST = 5;
 
 export default {
   name: 'Graph',
