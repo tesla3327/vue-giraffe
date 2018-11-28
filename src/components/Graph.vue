@@ -6,7 +6,7 @@
 
 <script>
 const minSpacing = 40;
-const ROUND_TO_NEAREST = 5;
+const ROUND_TO_NEAREST = 10;
 
 export default {
   name: 'Graph',
@@ -38,7 +38,6 @@ export default {
         numberOfTicks: this.numberOfTicks,
         spacing: this.spacing,
         dataLength: this.data.length,
-
       };
     },
     maxValues() {
@@ -62,12 +61,14 @@ export default {
 
       return { x, y };
     },
+    // How many pixels is equal to one value on the chart
     scale() {
       return {
         x: this.size.width / this.maxValues.x,
         y: this.size.height / this.maxValues.y,
       };
     },
+    // The step each tick goes up
     multiple() {
       const minX = this.size.width / minSpacing;
       const multipleX = Math.ceil(this.maxValues.x / minX / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
@@ -78,11 +79,12 @@ export default {
       return { x: multipleX, y: multipleY };
     },
     numberOfTicks() {
-      return {
-        x: this.maxValues.x / this.multiple.x,
-        y: this.maxValues.y / this.multiple.y,
-      }
+      const x = Math.ceil(this.maxValues.x / this.multiple.x);
+      const y = Math.ceil(this.maxValues.y / this.multiple.y);
+
+      return { x, y };
     },
+    // Spacing between graph ticks
     spacing() {
       return {
         x: this.size.width / this.numberOfTicks.x,
