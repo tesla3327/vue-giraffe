@@ -1,14 +1,15 @@
 <template>
   <Graph
     :data="points"
+    :width="width"
   >
     <div class="bar-graph">
 
       <!-- SVG -->
       <svg
-        :width="width"
+        :width="width + offsetX"
         :height="height"
-        :viewBox="`0 0 ${width} ${height}`"
+        :viewBox="`0 0 ${width + offsetX} ${height}`"
       >
         <Grid>
           <template slot-scope="{ x, y }">
@@ -16,14 +17,24 @@
               <path
                 v-for="({ offset, value }, index) in y"
                 class="line line--x"
-                :d="`M 0 ${height - offset}, L ${width} ${height - offset}`"
+                :d="`M ${offsetX} ${height - offset}, L ${width + offsetX} ${height - offset}`"
                 :key="`${index}-line-x`"
               />
+              <text
+                v-for="({ offset, value }, index) in y"
+                class="marker marker--x"
+                text-anchor="end"
+                :key="`${index}-marker-x`"
+                :x="offsetX - 10"
+                :y="height - offset"
+              >
+                {{ value }}
+              </text>
             </g>
           </template>
         </Grid>
         <Point
-          v-for="({ x, y, id }) in points"
+          v-for="({ x, y, id }, index) in points"
           :point="{ x, y }"
           :key="id"
         >
@@ -31,15 +42,20 @@
             <g>
               <rect
                 class="bar"
-                :style="{
-                  left: `${position.x + 25}px`,
-                  top: `${position.y}px`,
-                }"
                 :height="position.y"
                 :y="height - position.y"
-                :x="position.x + 25"
+                :x="position.x + 25 + offsetX"
                 :id="`${x}-${y}`"
               />
+              <text
+                class="label"
+                text-anchor="middle"
+                :key="`${index}-label-y`"
+                :x="position.x + offsetX + 50"
+                :y="height"
+              >
+                {{ labels[index] }}
+              </text>
             </g>
           </template>
         </Point>
@@ -47,7 +63,7 @@
       </svg>
 
       <!-- Div -->
-      <div>
+      <!-- <div>
         <Grid>
           <template slot-scope="{ x, y }">
             <div>
@@ -74,7 +90,7 @@
                 class="label"
                 :key="`${index}-label-y`"
                 :style="{
-                  left: `${position.x - 250 + 50}px`
+                  left: `${position.x - 250 + 50 + offsetX}px`
                 }"
               >
                 {{ labels[index] }}
@@ -82,7 +98,7 @@
             </div>
           </template>
         </Point>
-      </div>
+      </div> -->
 
     </div>
   </Graph>
@@ -118,7 +134,13 @@ export default {
     Point,
   },
   data() {
-    return { points, labels, height: 300, width: 600 };
+    return {
+      points,
+      labels,
+      height: 300,
+      width: 600,
+      offsetX: 50,
+    };
   }
 };
 </script>
@@ -136,11 +158,9 @@ svg {
 }
 
 .label {
-  position: absolute;
-  bottom: -30px;
-  text-align: center;
   width: 500px;
   font-weight: bold;
+  fill: white;
 }
 
 .line {
@@ -159,7 +179,7 @@ svg {
 
 .marker {
   position: absolute;
-  width: 30px;
+  fill: #2c3e50;
 }
 
 .marker--x {
