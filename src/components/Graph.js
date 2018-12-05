@@ -1,5 +1,5 @@
 const minSpacing = 40;
-const ROUND_TO_NEAREST = 5;
+const ROUND_TO_NEAREST = 2;
 
 export default {
   name: 'Graph',

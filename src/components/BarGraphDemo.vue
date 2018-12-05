@@ -7,9 +7,14 @@
 
       <!-- SVG -->
       <svg
-        :width="width + offsetX"
-        :height="height"
-        :viewBox="`0 0 ${width + offsetX} ${height}`"
+        :width="width + marginLeft + marginRight"
+        :height="height + marginTop + marginBottom"
+        :viewBox="`
+          ${-marginLeft}
+          ${-marginTop}
+          ${width + marginLeft + marginRight}
+          ${height + marginTop + marginBottom}
+        `"
       >
         <Grid>
           <template slot-scope="{ x, y }">
@@ -17,7 +22,7 @@
               <path
                 v-for="({ offset, value }, index) in y"
                 class="line line--x"
-                :d="`M ${offsetX} ${height - offset}, L ${width + offsetX} ${height - offset}`"
+                :d="`M 0 ${height - offset}, L ${width} ${height - offset}`"
                 :key="`${index}-line-x`"
               />
               <text
@@ -25,7 +30,7 @@
                 class="marker marker--x"
                 text-anchor="end"
                 :key="`${index}-marker-x`"
-                :x="offsetX - 10"
+                :x="-10"
                 :y="height - offset"
               >
                 {{ value }}
@@ -44,15 +49,15 @@
                 class="bar"
                 :height="position.y"
                 :y="height - position.y"
-                :x="position.x + 25 + offsetX"
+                :x="position.x + 25"
                 :id="`${x}-${y}`"
               />
               <text
                 class="label"
                 text-anchor="middle"
                 :key="`${index}-label-y`"
-                :x="position.x + offsetX + 50"
-                :y="height"
+                :x="position.x + 50"
+                :y="height + 20"
               >
                 {{ labels[index] }}
               </text>
@@ -111,7 +116,7 @@ import Point from './Point';
 
 const points = [];
 const scale = (Math.round(Math.random() * 100) + 5) * 10;
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 8; i++) {
   points.push({
     id: i,
     x: i,
@@ -125,6 +130,11 @@ const labels = [
   'Three',
   'Four',
   'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+  'Ten'
 ];
 
 export default {
@@ -139,7 +149,10 @@ export default {
       labels,
       height: 300,
       width: 600,
-      offsetX: 50,
+      marginLeft: 50,
+      marginRight: 0,
+      marginTop: 20,
+      marginBottom: 30,
     };
   }
 };
@@ -160,7 +173,7 @@ svg {
 .label {
   width: 500px;
   font-weight: bold;
-  fill: white;
+  fill: steelblue;
 }
 
 .line {
