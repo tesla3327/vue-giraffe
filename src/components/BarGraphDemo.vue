@@ -51,6 +51,8 @@
                 :y="height - position.y"
                 :x="position.x + 25"
                 :id="`${x}-${y}`"
+                rx="5"
+                ry="5"
               />
               <text
                 class="label"
@@ -120,7 +122,7 @@ export default {
       height: 300,
       width: 600,
       marginLeft: 50,
-      marginRight: 0,
+      marginRight: 5,
       marginTop: 20,
       marginBottom: 30,
     };
@@ -173,5 +175,11 @@ svg {
 .bar {
   width: 50px;
   fill: url(#gradient) #447799;
+  transition: fill 0.4s ease-in-out;
+}
+
+.bar:hover {
+  stroke-width: 3px;
+  stroke: lightblue;
 }
 </style>
