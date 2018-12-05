@@ -67,43 +67,13 @@
 
       </svg>
 
-      <!-- Div -->
-      <!-- <div>
-        <Grid>
-          <template slot-scope="{ x, y }">
-            <div>
-              <span
-                v-for="({ offset, value }, index) in y"
-                class="marker marker--x"
-                :key="`${index}-marker-x`"
-                :style="{ bottom: `${offset - 10}px` }"
-              >
-                {{ value }}
-              </span>
-            </div>
-          </template>
-        </Grid>
-
-        <Point
-          v-for="({ x, y, id }, index) in points"
-          :point="{ x, y }"
-          :key="id"
-        >
-          <template slot-scope="{ position, style }">
-            <div>
-              <span
-                class="label"
-                :key="`${index}-label-y`"
-                :style="{
-                  left: `${position.x - 250 + 50 + offsetX}px`
-                }"
-              >
-                {{ labels[index] }}
-              </span>
-            </div>
-          </template>
-        </Point>
-      </div> -->
+      <!-- Add in a cool gradient -->
+      <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <linearGradient id="gradient" x2="0" y2="1">
+          <stop offset="0%" stop-color="#447799" />
+          <stop offset="100%" stop-color="#224488" />
+        </linearGradient>
+      </svg>
 
     </div>
   </Graph>
@@ -173,7 +143,7 @@ svg {
 .label {
   width: 500px;
   font-weight: bold;
-  fill: steelblue;
+  fill: #224488;
 }
 
 .line {
@@ -202,6 +172,6 @@ svg {
 
 .bar {
   width: 50px;
-  fill: steelblue;
+  fill: url(#gradient) #447799;
 }
 </style>
