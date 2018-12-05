@@ -32,7 +32,7 @@ export default {
       return lines;
     }
   },
-  render(h) {
-    return h("div", {}, this.$scopedSlots.default({ x: this.x, y: this.y }));
+  render() {
+    return this.$scopedSlots.default({ x: this.x, y: this.y })[0];
   }
 };

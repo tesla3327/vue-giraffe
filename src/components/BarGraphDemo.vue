@@ -1,50 +1,90 @@
 <template>
-  <Graph class="bar-graph" :data="points">
-    <Grid>
-      <template slot-scope="{ x, y }">
-        <template v-for="({ offset, value }, index) in y">
-          <div
-            class="line line--x"
-            :style="{ bottom: `${offset}px` }"
-            :key="`${index}-line-x`"
-          />
-          <span
-            class="marker marker--x"
-            :key="`${index}-marker-x`"
-            :style="{ bottom: `${offset - 10}px` }"
-          >
-            {{ value }}
-          </span>
-        </template>
-      </template>
-    </Grid>
-    <Point
-      v-for="({ x, y, id }, index) in points"
-      :point="{ x, y }"
-      :key="id"
-    >
-      <template slot-scope="{ position, style }">
-        <div>
-          <div
-            class="bar"
-            :style="{
-              left: `${position.x + 25}px`,
-              top: `${position.y}px`,
-            }"
-            :id="`${x}-${y}`"
-          />
-          <span
-            class="label"
-            :key="`${index}-label-y`"
-            :style="{
-              left: `${position.x - 250 + 50}px`
-            }"
-          >
-            {{ labels[index] }}
-          </span>
-        </div>
-      </template>
-    </Point>
+  <Graph
+    :data="points"
+  >
+    <div class="bar-graph">
+
+      <!-- SVG -->
+      <svg
+        :width="width"
+        :height="height"
+        :viewBox="`0 0 ${width} ${height}`"
+      >
+        <Grid>
+          <template slot-scope="{ x, y }">
+            <g>
+              <path
+                v-for="({ offset, value }, index) in y"
+                class="line line--x"
+                :d="`M 0 ${height - offset}, L ${width} ${height - offset}`"
+                :key="`${index}-line-x`"
+              />
+            </g>
+          </template>
+        </Grid>
+        <Point
+          v-for="({ x, y, id }) in points"
+          :point="{ x, y }"
+          :key="id"
+        >
+          <template slot-scope="{ position, style }">
+            <g>
+              <rect
+                class="bar"
+                :style="{
+                  left: `${position.x + 25}px`,
+                  top: `${position.y}px`,
+                }"
+                :height="position.y"
+                :y="height - position.y"
+                :x="position.x + 25"
+                :id="`${x}-${y}`"
+              />
+            </g>
+          </template>
+        </Point>
+
+      </svg>
+
+      <!-- Div -->
+      <div>
+        <Grid>
+          <template slot-scope="{ x, y }">
+            <div>
+              <span
+                v-for="({ offset, value }, index) in y"
+                class="marker marker--x"
+                :key="`${index}-marker-x`"
+                :style="{ bottom: `${offset - 10}px` }"
+              >
+                {{ value }}
+              </span>
+            </div>
+          </template>
+        </Grid>
+
+        <Point
+          v-for="({ x, y, id }, index) in points"
+          :point="{ x, y }"
+          :key="id"
+        >
+          <template slot-scope="{ position, style }">
+            <div>
+              <span
+                class="label"
+                :key="`${index}-label-y`"
+                :style="{
+                  left: `${position.x - 250 + 50}px`
+                }"
+              >
+                {{ labels[index] }}
+              </span>
+            </div>
+          </template>
+        </Point>
+      </div>
+
+    </div>
   </Graph>
 </template>
 
@@ -78,17 +118,21 @@ export default {
     Point,
   },
   data() {
-    return { points, labels };
+    return { points, labels, height: 300, width: 600 };
   }
 };
 </script>
 
 <style scoped>
 .bar-graph {
-  width: 600px;
+  width: 100%;
   height: 300px;
   margin-bottom: 100px;
   position: relative;
+}
+
+svg {
+  width: 100%;
 }
 
 .label {
@@ -101,7 +145,7 @@ export default {
 
 .line {
   position: absolute;
-  background: #DDD;
+  stroke: #DDD;
 }
 
 .line:first-of-type {
@@ -124,9 +168,7 @@ export default {
 }
 
 .bar {
-  position: absolute;
-  bottom: 0;
   width: 50px;
-  background: steelblue;
+  fill: steelblue;
 }
 </style>
