@@ -1,50 +1,83 @@
 <template>
-  <Graph class="bar-graph" :data="points">
-    <Grid>
-      <template slot-scope="{ x, y }">
-        <template v-for="({ offset, value }, index) in y">
-          <div
-            class="line line--x"
-            :style="{ bottom: `${offset}px` }"
-            :key="`${index}-line-x`"
-          />
-          <span
-            class="marker marker--x"
-            :key="`${index}-marker-x`"
-            :style="{ bottom: `${offset - 10}px` }"
-          >
-            {{ value }}
-          </span>
-        </template>
-      </template>
-    </Grid>
-    <Point
-      v-for="({ x, y, id }, index) in points"
-      :point="{ x, y }"
-      :key="id"
-    >
-      <template slot-scope="{ position, style }">
-        <div>
-          <div
-            class="bar"
-            :style="{
-              left: `${position.x + 25}px`,
-              top: `${position.y}px`,
-            }"
-            :id="`${x}-${y}`"
-          />
-          <span
-            class="label"
-            :key="`${index}-label-y`"
-            :style="{
-              left: `${position.x - 250 + 50}px`
-            }"
-          >
-            {{ labels[index] }}
-          </span>
-        </div>
-      </template>
-    </Point>
+  <Graph
+    :data="points"
+    :width="width"
+  >
+    <div class="bar-graph">
+
+      <!-- SVG -->
+      <svg
+        :width="width + marginLeft + marginRight"
+        :height="height + marginTop + marginBottom"
+        :viewBox="`
+          ${-marginLeft}
+          ${-marginTop}
+          ${width + marginLeft + marginRight}
+          ${height + marginTop + marginBottom}
+        `"
+      >
+        <Grid>
+          <template slot-scope="{ x, y }">
+            <g>
+              <path
+                v-for="({ offset, value }, index) in y"
+                class="line line--x"
+                :d="`M 0 ${height - offset}, L ${width} ${height - offset}`"
+                :key="`${index}-line-x`"
+              />
+              <text
+                v-for="({ offset, value }, index) in y"
+                class="marker marker--x"
+                text-anchor="end"
+                :key="`${index}-marker-x`"
+                :x="-10"
+                :y="height - offset"
+              >
+                {{ value }}
+              </text>
+            </g>
+          </template>
+        </Grid>
+        <Point
+          v-for="({ x, y, id }, index) in points"
+          :point="{ x, y }"
+          :key="id"
+        >
+          <template slot-scope="{ position, style }">
+            <g>
+              <rect
+                class="bar"
+                :height="position.y"
+                :y="height - position.y"
+                :x="position.x + 25"
+                :id="`${x}-${y}`"
+                rx="5"
+                ry="5"
+              />
+              <text
+                class="label"
+                text-anchor="middle"
+                :key="`${index}-label-y`"
+                :x="position.x + 50"
+                :y="height + 20"
+              >
+                {{ labels[index] }}
+              </text>
+            </g>
+          </template>
+        </Point>
+
+      </svg>
+
+      <!-- Add in a cool gradient -->
+      <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <linearGradient id="gradient" x2="0" y2="1">
+          <stop offset="0%" stop-color="#447799" />
+          <stop offset="100%" stop-color="#224488" />
+        </linearGradient>
+      </svg>
+
+    </div>
   </Graph>
 </template>
 
@@ -55,7 +88,7 @@ import Point from './Point';
 
 const points = [];
 const scale = (Math.round(Math.random() * 100) + 5) * 10;
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 8; i++) {
   points.push({
     id: i,
     x: i,
@@ -69,6 +102,11 @@ const labels = [
   'Three',
   'Four',
   'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+  'Ten'
 ];
 
 export default {
@@ -78,30 +116,41 @@ export default {
     Point,
   },
   data() {
-    return { points, labels };
+    return {
+      points,
+      labels,
+      height: 300,
+      width: 600,
+      marginLeft: 50,
+      marginRight: 5,
+      marginTop: 20,
+      marginBottom: 30,
+    };
   }
 };
 </script>
 
 <style scoped>
 .bar-graph {
-  width: 600px;
+  width: 100%;
   height: 300px;
   margin-bottom: 100px;
   position: relative;
 }
 
+svg {
+  width: 100%;
+}
+
 .label {
-  position: absolute;
-  bottom: -30px;
-  text-align: center;
   width: 500px;
   font-weight: bold;
+  fill: #224488;
 }
 
 .line {
   position: absolute;
-  background: #DDD;
+  stroke: #DDD;
 }
 
 .line:first-of-type {
@@ -115,7 +164,7 @@ export default {
 
 .marker {
   position: absolute;
-  width: 30px;
+  fill: #2c3e50;
 }
 
 .marker--x {
@@ -124,9 +173,13 @@ export default {
 }
 
 .bar {
-  position: absolute;
-  bottom: 0;
   width: 50px;
-  background: steelblue;
+  fill: url(#gradient) #447799;
+  transition: fill 0.4s ease-in-out;
+}
+
+.bar:hover {
+  stroke-width: 3px;
+  stroke: lightblue;
 }
 </style>

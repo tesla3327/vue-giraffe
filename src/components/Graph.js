@@ -1,12 +1,5 @@
-<template>
-  <div>
-    <slot />
-  </div>
-</template>
-
-<script>
 const minSpacing = 40;
-const ROUND_TO_NEAREST = 5;
+const ROUND_TO_NEAREST = 2;
 
 export default {
   name: 'Graph',
@@ -15,6 +8,7 @@ export default {
       type: Array,
       required: true,
     },
+    width: Number,
   },
   provide() {
     return { graph: this };
@@ -94,8 +88,10 @@ export default {
   },
   mounted() {
     // We can now populate our reactive object properly
-    this.size.width = this.$el.clientWidth;
+    this.size.width = this.width || this.$el.clientWidth;
     this.size.height = this.$el.clientHeight;
+  },
+  render() {
+    return this.$slots.default[0];
   }
 };
-</script>
