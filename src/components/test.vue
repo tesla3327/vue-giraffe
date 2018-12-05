@@ -1,7 +1,7 @@
 <template>
   <div>
     <BarGraphDemo />
-    <!-- <ScatterPlotDemo /> -->
+    <ScatterPlotDemo />
   </div>
 </template>
 

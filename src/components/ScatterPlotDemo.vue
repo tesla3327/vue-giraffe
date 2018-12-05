@@ -1,50 +1,54 @@
 <template>
   <Graph :data="points" class="scatter-plot">
-    <Grid>
-      <template slot-scope="{ x, y }">
-        <template v-for="({ offset, value }, index) in y">
-          <div
-            class="line line--x"
-            :style="{ bottom: `${offset}px` }"
-            :key="`${index}-line-x`"
-          />
-          <span
-            class="marker marker--x"
-            :key="`${index}-marker-x`"
-            :style="{ bottom: `${offset - 10}px` }"
-          >
-            {{ value }}
-          </span>
+    <div>
+      <Grid>
+        <template slot-scope="{ x, y }">
+          <div>
+            <template v-for="({ offset, value }, index) in y">
+              <div
+                class="line line--x"
+                :style="{ bottom: `${offset}px` }"
+                :key="`${index}-line-x`"
+              />
+              <span
+                class="marker marker--x"
+                :key="`${index}-marker-x`"
+                :style="{ bottom: `${offset - 10}px` }"
+              >
+                {{ value }}
+              </span>
+            </template>
+            <template v-for="({ offset, value }, index) in x">
+              <div
+                class="line line--y"
+                :style="{ left: `${offset}px` }"
+                :key="`${index}-line-y`"
+              />
+              <span
+                class="marker marker--y"
+                :key="`${index}-marker-y`"
+                :style="{ left: `${offset - 15}px` }"
+              >
+                {{ value }}
+              </span>
+            </template>
+          </div>
         </template>
-        <template v-for="({ offset, value }, index) in x">
+      </Grid>
+      <Point
+        v-for="({ x, y, id }) in points"
+        :point="{ x, y }"
+        :key="id"
+      >
+        <template slot-scope="{ position, style }">
           <div
-            class="line line--y"
-            :style="{ left: `${offset}px` }"
-            :key="`${index}-line-y`"
+            class="point"
+            :style="style"
+            :id="`${x}-${y}`"
           />
-          <span
-            class="marker marker--y"
-            :key="`${index}-marker-y`"
-            :style="{ left: `${offset - 15}px` }"
-          >
-            {{ value }}
-          </span>
         </template>
-      </template>
-    </Grid>
-    <Point
-      v-for="({ x, y, id }) in points"
-      :point="{ x, y }"
-      :key="id"
-    >
-      <template slot-scope="{ position, style }">
-        <div
-          class="point"
-          :style="style"
-          :id="`${x}-${y}`"
-        />
-      </template>
-    </Point>
+      </Point>
+    </div>
   </Graph>
 </template>
 
