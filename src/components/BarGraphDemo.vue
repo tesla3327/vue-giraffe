@@ -6,15 +6,13 @@
     <div class="bar-graph">
 
       <!-- SVG -->
-      <svg
-        :width="width + marginLeft + marginRight"
-        :height="height + marginTop + marginBottom"
-        :viewBox="`
-          ${-marginLeft}
-          ${-marginTop}
-          ${width + marginLeft + marginRight}
-          ${height + marginTop + marginBottom}
-        `"
+      <SVGWithMargins
+        :width="width"
+        :height="height"
+        :marginTop="marginTop"
+        :marginRight="marginRight"
+        :marginBottom="marginBottom"
+        :marginLeft="marginLeft"
       >
         <Grid>
           <template slot-scope="{ x, y }">
@@ -67,7 +65,7 @@
           </template>
         </Point>
 
-      </svg>
+      </SVGWithMargins>
 
       <!-- Add in a cool gradient -->
       <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
@@ -85,6 +83,7 @@
 import Graph from './Graph';
 import Grid from './Grid';
 import Point from './Point';
+import SVGWithMargins from './SVGWithMargins';
 
 const points = [];
 const scale = (Math.round(Math.random() * 100) + 5) * 10;
@@ -114,6 +113,7 @@ export default {
     Graph,
     Grid,
     Point,
+    SVGWithMargins,
   },
   data() {
     return {
