@@ -43,7 +43,10 @@
         <template slot-scope="{ position, style }">
           <div
             class="point"
-            :style="style"
+            :style="{
+              bottom: `${position.y}px`,
+              left: `${position.x}px`
+            }"
             :id="`${x}-${y}`"
           />
         </template>
@@ -123,6 +126,7 @@ export default {
 }
 
 .point {
+  position: absolute;
   margin-left: -5px;
   margin-bottom: -5px;
   width: 10px;
